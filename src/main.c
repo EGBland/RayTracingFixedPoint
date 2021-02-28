@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include "fixed_point.h"
-#define TEST_FP 0
-#define TEST_INVSQRT 1
+#include "vec3.h"
 
-const int image_width = 256;
-const int image_height = 224;
+#define TEST_FP 0
+#define TEST_INVSQRT 0
+#define TEST_VEC3 0
+
+#define image_width 256
+#define image_height 224
 
 const fp_t image_width_fp = to_fp(image_width);
 const fp_t image_height_fp = to_fp(image_height);
@@ -35,14 +38,33 @@ int main() {
     return 0;
 
 #elif TEST_INVSQRT == 1
-    fp_t a,b;
-    a = to_fp(7853);
-    printf("fp 7853\t\t%d\t", a);
+    fp_t a, b, c;
+    a = to_fp(322);
+    printf("fp\t\t%d\t", a);
     print_bin(a);
-    b = fp_invsqrt(a);
-    printf("\nfp sqrt(7853)\t%d\t", b);
+    printf("\nmsb\t\t%d", msb(a));
+    b = fp_sqrt(a);
+    printf("\nsqrt\t\t%d\t", b);
     print_bin(b);
+    c = fp_invsqrt(a);
+    printf("\ninvsqrt\t\t%d\t", c);
+    print_bin(c);
     printf("\n");
+    return 0;
+
+#elif TEST_VEC3 == 1
+    fp_t a;
+    vec3_t v1, v2;
+    v1.x = 13*FP_ONE;
+    v1.y = 12*FP_ONE;
+    v1.z = 3*FP_ONE;
+    printf("vec3\t(%d,%d,%d)\n", v1.x, v1.y, v1.z);
+    a = vec3_dot(&v1, &v1);
+    printf("len\t%d\n", a);
+    vec3_norm(&v2, &v1);
+    printf("norm\t(%d,%d,%d)\n", v2.x, v2.y, v2.z);
+    a = vec3_dot(&v2, &v2);
+    printf("nlen\t%d\n", a);
     return 0;
 
 #else

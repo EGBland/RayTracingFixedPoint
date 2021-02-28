@@ -1,13 +1,13 @@
 #ifndef __FIXED_POINT_H_DEFINED__
 #define __FIXED_POINT_H_DEFINED__ 1
 
-#define SIGNIFICAND (8)
+#define SIGNIFICAND (12)
+#define FP_FRAC_MASK (1 << SIGNIFICAND) - 1
+#define FP_ONE 1 << SIGNIFICAND
 
 #define to_fp(X) X << SIGNIFICAND
 #define from_fp(X) X >> SIGNIFICAND
-#define fp_imult(X,Y) ((X >> SIGNIFICAND) * (Y >> SIGNIFICAND)) << SIGNIFICAND
-#define fp_mult(X,Y) (X >> (SIGNIFICAND / 2)) * (Y >> (SIGNIFICAND / 2))
-#define fp_fmult(X,Y) (X * Y) << SIGNIFICAND
+#define fp_mult(X,Y) (((X >> SIGNIFICAND) * (Y >> SIGNIFICAND)) << SIGNIFICAND) + (X >> SIGNIFICAND) * (Y & FP_FRAC_MASK) + (X & FP_FRAC_MASK) * (Y >> SIGNIFICAND) + (((X & FP_FRAC_MASK) * (Y & FP_FRAC_MASK)) >> SIGNIFICAND)
 #define fp_idiv(X,Y) (X / Y) << SIGNIFICAND
 #define fp_add(X,Y) X + Y
 
